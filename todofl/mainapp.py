@@ -1,4 +1,4 @@
-from flask import Flask , request , jsonify , abort
+from flask import Flask , request , jsonify
 from flask_cors import CORS
 from typing import TypedDict
 
@@ -34,7 +34,6 @@ def add_item():
             },
         )
         response = http_response , 406
-    http_response.headers.add('Access-Control-Allow-Origin' , '*')
     return response
 
 @app.route('/items')
