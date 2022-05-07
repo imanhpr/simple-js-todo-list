@@ -1,12 +1,15 @@
 import { alertMaker, listItemMaker, sendData, getAllItems } from "./maker.js";
 
+const itemTextMaker = (id, text) => `${id} - ${text}`;
 const btnd = document.getElementById("main-btn");
 const textbox = document.getElementById('text-box');
 btnd.addEventListener('click', () => {
     if (textbox.value.trim() !== '') {
         (async() => {
-            const response = await sendData(textbox.value.trim());
-            console.log(response)
+            const { _id: main_id, description: text } = await sendData(textbox.value.trim());
+            listItemMaker(
+                itemTextMaker(main_id, text)
+            )
         })();
     } else {
         alertMaker('We can\'t submit empty textbox');
@@ -16,6 +19,7 @@ btnd.addEventListener('click', () => {
 (async() => {
     const items = await getAllItems();
     items.forEach(element => {
-        listItemMaker(`${element['_id']} - ${element['description']}`)
+        const { _id, description } = element;
+        listItemMaker(itemTextMaker(_id, description))
     });
 })();
