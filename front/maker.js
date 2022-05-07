@@ -28,8 +28,8 @@ function listItemMaker(text) {
     ulist.appendChild(new_li)
 }
 
-function alertMaker() {
-    const new_div = genricElementMaker('div', 'We can\' make empty list item.');
+function alertMaker(text) {
+    const new_div = genricElementMaker('div', text);
     new_div.classList.add('alert', `alert-${alertColor.oneUp()}`)
     new_div.setAttribute('role', 'alert')
     alertBox.appendChild(new_div)
