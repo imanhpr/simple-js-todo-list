@@ -38,7 +38,26 @@ function alertMaker(text) {
     }, 3000);
 }
 
+async function sendData(text) {
+    const header = new Headers
+    header.append('content-type', 'application/json')
+    const response = await fetch('http://localhost:5000/add-item', {
+        method: 'POST',
+        mod: 'cors',
+        headers: header,
+        body: JSON.stringify({ 'description': text })
+    })
+    if (response.ok) {
+        return await response.json();
+    } else {
+        const jsonResponse = await response.json();
+        alertMaker(jsonResponse.message)
+        return jsonResponse
+    }
+}
+
 export {
     listItemMaker,
     alertMaker,
+    sendData
 }
