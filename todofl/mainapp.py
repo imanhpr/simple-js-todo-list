@@ -1,8 +1,9 @@
 from flask import Flask , request , jsonify , abort
+from flask_cors import CORS
 from typing import TypedDict
 
 app = Flask(__name__)
-
+CORS(app)
 class TodoItem(TypedDict):
     _id : int
     description : str
