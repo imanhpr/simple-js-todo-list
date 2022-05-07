@@ -56,8 +56,14 @@ async function sendData(text) {
     }
 }
 
+async function getAllItems() {
+    const response = await fetch('http://localhost:5000/items');
+    return await response.json()
+}
+
 export {
     listItemMaker,
     alertMaker,
-    sendData
+    sendData,
+    getAllItems
 }
