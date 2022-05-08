@@ -1,12 +1,15 @@
+from datetime import datetime
 from flask import Flask , request , jsonify
 from flask_cors import CORS
 from typing import TypedDict
 
 app = Flask(__name__)
 CORS(app)
+
 class TodoItem(TypedDict):
     _id : int
     description : str
+    date_time : datetime
 
 TODO_ITEMS : list[None | TodoItem] = []
 counter = 0
