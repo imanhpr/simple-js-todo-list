@@ -39,3 +39,19 @@ def add_item():
 @app.route('/items')
 def all_items():
     return jsonify(TODO_ITEMS)
+
+@app.route('/items/<int:_id>')
+def item_by_id(_id):
+    # I know it's better to implement 
+    # this with an efficient search algorithm like binary-search
+    # but I'm lazy and this is for just testing purpose
+    for item in TODO_ITEMS:
+        print(item)
+        if item['_id'] == _id:
+            return jsonify(item)
+    return jsonify(
+        {
+                'message':'Item Not Found' ,
+                'success' : False,
+        },
+    ) , 404
