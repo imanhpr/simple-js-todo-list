@@ -45,7 +45,7 @@ async function sendData(text) {
         method: 'POST',
         mod: 'cors',
         headers: header,
-        body: JSON.stringify({ 'description': text })
+        body: JSON.stringify({ 'description': text, 'date_time': new Date() })
     })
     if (response.ok) {
         return await response.json();
