@@ -15,7 +15,7 @@ class ListItemColor {
 
 const alertColor = new ListItemColor();
 
-function genricElementMaker(elmentName, text) {
+function genricElementMaker(elmentName, text = "") {
     const new_text = document.createTextNode(text);
     const new_element = document.createElement(elmentName);
     new_element.appendChild(new_text);
@@ -36,6 +36,35 @@ function alertMaker(text) {
     setTimeout(() => {
         new_div.remove()
     }, 3000);
+}
+
+function dayCardMaker(date) {
+    if (date instanceof Date) {
+        date = date.toDateString();
+    }
+    const raw_elemet_data = {
+        'row': { "class": 'row', "el": "div" },
+        'col': { "class": 'col', "el": "div" },
+        'card': { "class": 'card', "el": "div" },
+        'card-header': { "class": 'card-header', "el": "div" },
+        'card-body': { "class": 'card-body', "el": "div" },
+    };
+    const { row, col, card, "card-header": card_header, "card-body": card_body } =
+    Object.fromEntries(
+        Object.entries(raw_elemet_data).map(([key, value]) => {
+            const new_el = document.createElement(value['el']);
+            new_el.classList.add(value['class'])
+            return [key, new_el];
+        })
+    );
+    const header_text = document.createTextNode(date);
+    card_header.appendChild(header_text);
+    row.appendChild(col);
+    col.appendChild(card);
+    card.appendChild(card_header);
+    card.appendChild(card_body);
+    document.querySelector('main').appendChild(row).classList.add('my-2');
+
 }
 
 async function sendData(text) {
@@ -65,5 +94,6 @@ export {
     listItemMaker,
     alertMaker,
     sendData,
-    getAllItems
+    getAllItems,
+    dayCardMaker,
 }
