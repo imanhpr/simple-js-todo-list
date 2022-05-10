@@ -1,23 +1,46 @@
 class liItem {
     constructor(text, dateobj) {
         this.text = document.createTextNode(text);
+        this.ptext = document.createElement('p')
+        this.ptext.classList.add('card-text')
+        this.ptext.appendChild(this.text)
         this.done = false;
         this.date = dateobj;
         this.main_el = document.createElement('li');
-        this.main_el.appendChild(this.text)
-        this.main_el.classList.add('list-group-item', `list-group-item-primary`);
+        this.main_el.appendChild(this.ptext)
+        this.main_el.classList.add(
+            'list-group-item', `list-group-item-primary`,
+            'd-flex', 'justify-content-between'
+        );
+        this.div_check = null;
+        this.checkbox = null;
+        this._checkBox_Maker();
+        this.main_el.appendChild(this.div_check)
     }
     get element() {
         return this.main_el
+    }
+    get checkBox() {
+        return this.checkbox
     }
     get state() {
         return this.done
     }
     set state(bool) {
-        if (!(bool instanceof Boolean))
+        if (typeof bool !== 'boolean')
             throw Error('You must use boolean value');
         this.done = bool;
 
+    }
+    _checkBox_Maker() {
+        const tags = ['div', 'input'];
+        const [main_div, input] = tags.map(item => document.createElement(item))
+        main_div.classList.add('form-check');
+        input.setAttribute('type', 'checkbox');
+        input.classList.add('form-check-input');
+        main_div.appendChild(input);
+        this.div_check = main_div;
+        this.checkbox = input;
     }
 }
 
@@ -83,5 +106,7 @@ export default class TodoDayBox {
         const newjob = new liItem(text, datetime);
         console.log(newjob.element)
         this.job_container.append(newjob.element)
+        newjob.checkbox.addEventListener('change', () =>
+            newjob.state = (newjob.state) ? false : true);
     }
 };
