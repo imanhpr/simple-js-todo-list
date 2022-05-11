@@ -1,3 +1,5 @@
+import JobData from "./dataclass.js";
+
 const ulist = document.getElementById("main-ul");
 const alertBox = document.getElementById('alert-box');
 
@@ -87,7 +89,11 @@ async function sendData(text) {
 
 async function getAllItems() {
     const response = await fetch('http://localhost:5000/items');
-    return await response.json()
+    const json_data = await response.json()
+    return json_data.map(object => {
+        const date = new Date(object.date_time)
+        return JobData.with_id(object._id, object.text, date, object.state, );
+    })
 }
 
 export {
