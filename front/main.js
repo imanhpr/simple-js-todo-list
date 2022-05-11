@@ -1,7 +1,8 @@
 import { alertMaker, listItemMaker, sendData, getAllItems } from "./maker.js";
 import TodoDayBox from "./daycomp.js";
+import JobData from "./dataclass.js";
 
-const itemTextMaker = (id, text, time, date) => `${id} - ${text} - ${ time } - ${ date }`;
+const itemTextMaker = (id, text, time, date) => `${id} - ${text} - ${ time }`;
 const btnd = document.getElementById("main-btn");
 const textbox = document.getElementById('text-box');
 const dayMap = new Map()
@@ -17,7 +18,7 @@ btnd.addEventListener('click', () => {
                 dayMap.set(datestr, box);
                 box.insert()
             }
-            box.appendJob(text, datetime)
+            box.appendJob(itemTextMaker(main_id, text, datetime.toLocaleTimeString()), datetime)
         })();
     } else {
         alertMaker('We can\'t submit empty textbox');
@@ -28,17 +29,13 @@ btnd.addEventListener('click', () => {
     const items = await getAllItems();
     items.forEach(element => {
         const { _id, description, date_time } = element;
-        element.date_time = new Date(date_time);
-    });
-    items.forEach(element => {
-        const date = element.date_time
+        const date = new Date(date_time);
         let box = dayMap.get(date.toDateString())
         if (!box) {
             box = new TodoDayBox(date)
             dayMap.set(date.toDateString(), box)
             box.insert()
         }
-        box.appendJob(element.description, date)
-
+        box.appendJob(itemTextMaker(_id, description, date.toLocaleTimeString()), date)
     });
 })();
