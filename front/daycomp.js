@@ -1,6 +1,8 @@
 class liItem {
     constructor(text, dateobj) {
         this.text = document.createTextNode(text);
+        this.text_del = this.text.cloneNode(true)
+        this.del = document.createElement('del')
         this.ptext = document.createElement('p')
         this.ptext.classList.add('card-text')
         this.ptext.appendChild(this.text)
@@ -8,6 +10,7 @@ class liItem {
         this.date = dateobj;
         this.main_el = document.createElement('li');
         this.main_el.appendChild(this.ptext)
+        this.del.appendChild(this.text_del);
         this.main_el.classList.add(
             'list-group-item', `list-group-item-primary`,
             'd-flex', 'justify-content-between'
@@ -30,7 +33,17 @@ class liItem {
         if (typeof bool !== 'boolean')
             throw Error('You must use boolean value');
         this.done = bool;
+        this._delete()
 
+    }
+    _delete() {
+        if (this.done) {
+            this.ptext.remove()
+            this.main_el.insertBefore(this.del, this.main_el.firstChild)
+        } else {
+            this.del.remove()
+            this.main_el.insertBefore(this.ptext, this.main_el.firstChild)
+        }
     }
     _checkBox_Maker() {
         const tags = ['div', 'input'];
@@ -94,7 +107,6 @@ export default class TodoDayBox {
         this.job_container = job_container;
         this.card = card;
         this.main_el = row;
-        console.log(row)
     }
     insert() {
         document.querySelector('main').appendChild(this.main_el);
@@ -104,7 +116,6 @@ export default class TodoDayBox {
     }
     appendJob(text, datetime) {
         const newjob = new liItem(text, datetime);
-        console.log(newjob.element)
         this.job_container.append(newjob.element)
         newjob.checkbox.addEventListener('change', () =>
             newjob.state = (newjob.state) ? false : true);
