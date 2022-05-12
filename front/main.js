@@ -20,7 +20,7 @@ btnd.addEventListener('click', () => {
                 dayMap.set(datestr, box);
                 box.insert()
             }
-            box.appendJob(itemTextMaker(new_job.id, new_job.text, datetime.toLocaleTimeString()), datetime)
+            box.appendJob(itemTextMaker(new_job.id, new_job.text, datetime.toLocaleTimeString()), datetime, new_job.id)
         })();
     } else {
         alertMaker('We can\'t submit empty textbox');
@@ -30,7 +30,8 @@ btnd.addEventListener('click', () => {
 (async() => {
     const items = await getAllItems();
     items.forEach(element => {
-        const { id, text, date_time } = element;
+        const { id, text, date_time, state } = element;
+        console.log(state)
         const date = new Date(date_time);
         let box = dayMap.get(date.toDateString())
         if (!box) {
@@ -38,6 +39,6 @@ btnd.addEventListener('click', () => {
             dayMap.set(date.toDateString(), box)
             box.insert()
         }
-        box.appendJob(itemTextMaker(id, text, date.toLocaleTimeString()), date)
+        box.appendJob(itemTextMaker(id, text, date.toLocaleTimeString()), date, id, state)
     });
 })();
