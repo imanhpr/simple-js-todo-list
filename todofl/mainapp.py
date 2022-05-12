@@ -59,7 +59,6 @@ def item_by_id(_id):
     # but I'm lazy and this is for just testing purpose
     found_item = None
     for item in TODO_ITEMS:
-        print(item)
         if item["_id"] == _id:
             found_item = item
     if not found_item:
@@ -73,16 +72,14 @@ def item_by_id(_id):
             404,
         )
 
-    match request.method:
-        case "GET":
-            return jsonify(found_item)
-        case "PATCH":
-            print(request.json)
-            try :
-                state = request.json['state']
-            except KeyError:
-                return jsonify({'message':"bad request" , 'success' : False}), 400
-            found_item['state'] = state
-            return found_item
-        case _:
-            return jsonify({'message':"bad request" , 'success' : False}), 400
+    if request.method == "GET":
+        return jsonify(found_item)
+    elif request.method == "PATCH":
+        try :
+            data = request.get_json()
+            state = data['state']
+        except KeyError:
+            return jsonify({'message':"Key not Found" , 'success' : False}), 404
+        found_item['state'] = state
+        return found_item
+    return jsonify({'message':"bad request" , 'success' : False}), 400
