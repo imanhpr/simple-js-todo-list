@@ -1,12 +1,13 @@
 class liItem {
-    constructor(text, dateobj) {
+    constructor(text, dateobj, _id, state) {
+        this._id = _id;
         this.text = document.createTextNode(text);
         this.text_del = this.text.cloneNode(true)
         this.del = document.createElement('del')
         this.ptext = document.createElement('p')
         this.ptext.classList.add('card-text')
         this.ptext.appendChild(this.text)
-        this.done = false;
+        this.done = state;
         this.date = dateobj;
         this.main_el = document.createElement('li');
         this.main_el.appendChild(this.ptext)
@@ -19,6 +20,7 @@ class liItem {
         this.checkbox = null;
         this._checkBox_Maker();
         this.main_el.appendChild(this.div_check)
+        if (this.done === true) this._delete();
     }
     get element() {
         return this.main_el
@@ -32,6 +34,21 @@ class liItem {
     set state(bool) {
         if (typeof bool !== 'boolean')
             throw Error('You must use boolean value');
+        (async() => {
+            const request_header = new Headers;
+            console.log('fuckmeeee')
+            request_header.append('content-type', 'application/json');
+            const response = await fetch(`http://localhost:5000/items/${this._id}`, {
+                method: 'PATCH',
+                mod: 'cors',
+                headers: request_header,
+                body: JSON.stringify({ "state": bool })
+            });
+            if (!response.ok) {
+                throw Error('State didn\'t update')
+            }
+            console.log(await response.json())
+        })();
         this.done = bool;
         this._delete()
 
@@ -114,8 +131,8 @@ export default class TodoDayBox {
     remove() {
         document.querySelector('main').removeChild(this.main_el);
     }
-    appendJob(text, datetime) {
-        const newjob = new liItem(text, datetime);
+    appendJob(text, datetime, _id, state) {
+        const newjob = new liItem(text, datetime, _id, state);
         this.job_container.append(newjob.element)
         newjob.checkbox.addEventListener('change', () =>
             newjob.state = (newjob.state) ? false : true);
